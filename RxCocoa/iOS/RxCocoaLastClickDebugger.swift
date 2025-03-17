@@ -3,7 +3,7 @@ import Foundation
 public struct RxCocoaLastClickDebugger {
     private static var className: String = ""
 
-    public static var blacklistClassName: (() -> [String])?
+    public static var skipClassName: (() -> [String])?
 
     public static func getClassName() -> String {
         defer {
@@ -24,13 +24,13 @@ public struct RxCocoaLastClickDebugger {
     }
 
     public static func findInherenceNode(in view: UIView) -> String? {
-        guard let superview = view.superview, let blacklist = blacklistClassName?() else {
+        guard let superview = view.superview, let skiplist = skipClassName?() else {
             return nil
         }
 
         let stringName = superview.description
 
-        if !blacklist.contains(stringName) {
+        if !skiplist.contains(stringName) {
             return stringName
         }
 
