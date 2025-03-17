@@ -1,55 +1,36 @@
 import Foundation
 
 public struct RxCocoaLastClickDebugger {
-    public static var getClassName: ((String?) -> Void)?
-
     private static var className: String = ""
+
+    public static var whitelistClassName: (() -> [String])?
+
+    public static func getClassName() -> String {
+        defer {
+            // Reset State
+            Self.className = ""
+        }
+        return Self.className
+    }
 
     public static func setClassName(_ className: String) {
         // Reset State
-        Self.className = ""
-        Self.getClassName?(className)
+        if Self.className != "" {
+            let appendText = "\(Self.className)-\(className)"
+            Self.className = appendText
+            return
+        }
         Self.className = className
     }
 
-    public static func appendClassName(_ className: String) {
-        let appendText = "\(Self.className)-\(className)"
-        Self.getClassName?(appendText)
-        Self.className = appendText
-    }
-
     public static func findInherenceNode(in view: UIView) -> String? {
-        guard let superview = view.superview else {
+        guard let superview = view.superview, let whitelist = whitelistClassName?() else {
             return nil
         }
 
         let stringName = superview.description
 
-        if !stringName
-            .contains(
-                "UIView"
-            ),
-            !stringName
-                .contains(
-                    "CollectionViewCell"
-                ),
-            !stringName
-                .contains(
-                    "CollectionView"
-                ),
-            !stringName
-                .contains(
-                    "SharedUI"
-                ),
-            !stringName
-                .contains(
-                    "iCarousel"
-                ),
-            !stringName
-                .contains(
-                    "ScrollView"
-                )
-        {
+        if !whitelist.contains(stringName) {
             return stringName
         }
 
