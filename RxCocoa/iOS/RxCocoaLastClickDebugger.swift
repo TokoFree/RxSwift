@@ -6,21 +6,18 @@ public struct RxCocoaLastClickDebugger {
     public static var skipClassName: (() -> [String])?
 
     public static func getClassName() -> String {
-        defer {
-            // Reset State
-            Self.className = ""
-        }
         return Self.className
     }
 
     public static func setClassName(_ className: String) {
         // Reset State
-        if Self.className != "" {
-            let appendText = "\(Self.className)-\(className)"
-            Self.className = appendText
-            return
-        }
+        Self.className = ""
         Self.className = className
+    }
+    
+    public static func appendClassName(_ className: String) {
+        let appendText = "\(Self.className)-\(className)"
+        Self.className = appendText
     }
 
     public static func findInherenceNode(in view: UIView) -> String? {
