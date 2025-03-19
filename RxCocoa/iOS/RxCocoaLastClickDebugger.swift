@@ -40,7 +40,11 @@ public struct RxCocoaLastClickDebugger {
 
         let stringName = superview.description
 
-        if !skiplist.contains(stringName) {
+        let skipCheck = skiplist.map {
+            return !stringName.contains($0)
+        }.filter { $0 }
+
+        if skipCheck.count == skiplist.count {
             return stringName
         }
 
