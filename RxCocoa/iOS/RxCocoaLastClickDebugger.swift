@@ -10,6 +10,10 @@ public struct RxCocoaLastClickDebugger {
         Get the last clicked class name
     */
     public static func getClassName() -> String {
+        defer {
+            // Reset State
+            Self.className = ""
+        }
         return Self.className
     }
 
