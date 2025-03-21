@@ -33,21 +33,28 @@ public struct RxCocoaLastClickDebugger {
     /*
         This Function is used to recursively until get meaningfull class name
     */
-    public static func findInherenceNode(in view: UIView) -> String? {
-        guard let superview = view.superview, let skiplist = skipClassName?() else {
+    public static func findInherenceNode(in view: UIView, isGoingUp: Bool = true) -> String? {
+        guard let view = isGoingUp ? view.superview : view, let skiplist = skipClassName?() else {
             return nil
         }
 
-        let stringName = superview.description
+        let stringName = view.description
 
-        let skipCheck = skiplist.map {
-            return !stringName.contains($0)
-        }.filter { $0 }
-
-        if skipCheck.count == skiplist.count {
+        if !skiplist.contains(where: { stringName.contains($0) }) {
             return stringName
         }
 
-        return findInherenceNode(in: superview)
+        if isGoingUp {
+            return findInherenceNode(in: view)
+        } else {
+            for subview in view.subviews {
+                if let found = findInherenceNode(in: subview, isGoingUp: false) {
+                    return found.description
+                }
+            }
+        }
+
+        return nil
     }
+
 }
