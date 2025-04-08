@@ -2,32 +2,38 @@ import Foundation
 import UIKit
 
 public struct RxCocoaLastClickDebugger {
-    private static var className: String = ""
+    public struct DebugData {
+        public let className: String
+        public let groupID: String
+    }
+    
+    private static var debugData: DebugData = .init(className: "", groupID: "")
 
     public static var skipClassName: (() -> [String])?
 
     /*
         Get the last clicked class name
     */
-    public static func getClassName() -> String {
-        return Self.className
+    public static func getDebugData() -> DebugData {
+        return Self.debugData
     }
+    
 
     /*
         Set the last clicked class name
     */
-    public static func setClassName(_ className: String) {
-        // Reset State
-        Self.className = ""
-        Self.className = className
+    public static func setClassName(_ className: String, groupID: String) {
+        Self.debugData = DebugData(className: className, groupID: groupID)
     }
 
     /*
         Appending setted class name
     */
     public static func appendClassName(_ className: String) {
-        let appendText = "\(Self.className)-\(className)"
-        Self.className = appendText
+        let appendText = "\(Self.debugData.className)-\(className)"
+        let groupID = Self.debugData.groupID
+        let newDebugData = DebugData(className: appendText, groupID: groupID)
+        Self.debugData = newDebugData
     }
 
     /*
