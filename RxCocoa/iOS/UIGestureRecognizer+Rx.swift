@@ -64,7 +64,8 @@
                 let observer = GestureTarget(control) { control in
                     if let ctrl = control as? UITapGestureRecognizer, let view = ctrl.view {
                         RxCocoaLastClickDebugger.setClassName(
-                            "\(RxCocoaLastClickDebugger.findInherenceNode(in: view))-Gesture+RX"
+                            "\(RxCocoaLastClickDebugger.findInherenceNode(in: view))",
+                            groupID: "UITapGestureRecognizer"
                         )
                     }
                     observer.on(.next(control))
