@@ -6,18 +6,20 @@ public struct RxCocoaLastClickDebugger {
         public let className: String
         public let groupID: String
     }
-    
-    private static var debugData: DebugData = .init(className: "", groupID: "")
+
+    private static var debugData: DebugData?
 
     public static var skipClassName: (() -> [String])?
 
     /*
         Get the last clicked class name
     */
-    public static func getDebugData() -> DebugData {
+    public static func getDebugData() -> DebugData? {
+        defer {
+            Self.debugData = nil
+        }
         return Self.debugData
     }
-    
 
     /*
         Set the last clicked class name
@@ -40,7 +42,7 @@ public struct RxCocoaLastClickDebugger {
         This Function is used to recursively until get meaningfull class name
     */
     public static func findInherenceNode(in view: UIView, isGoingUp: Bool = true) -> String? {
-        guard let view = isGoingUp ? view.superview : view, let skiplist = skipClassName?() else {
+        guard let skiplist = skipClassName?() else {
             return nil
         }
 
@@ -50,8 +52,8 @@ public struct RxCocoaLastClickDebugger {
             return stringName
         }
 
-        if isGoingUp {
-            return findInherenceNode(in: view)
+        if let superview = view.superview, isGoingUp {
+            return findInherenceNode(in: superview)
         } else {
             for subview in view.subviews {
                 if let found = findInherenceNode(in: subview, isGoingUp: false) {
