@@ -32,8 +32,8 @@ public struct RxCocoaLastClickDebugger {
         Appending setted class name
     */
     public static func appendClassName(_ className: String) {
-        let appendText = "\(Self.debugData.className)-\(className)"
-        let groupID = Self.debugData.groupID
+        let appendText = "\(Self.debugData?.className ?? "")-\(className)"
+        let groupID = Self.debugData?.groupID ?? ""
         let newDebugData = DebugData(className: appendText, groupID: groupID)
         Self.debugData = newDebugData
     }
