@@ -63,10 +63,7 @@
 
                 let observer = GestureTarget(control) { control in
                     if let ctrl = control as? UITapGestureRecognizer, let view = ctrl.view {
-                        RxCocoaLastClickDebugger.setClassName(
-                            "\(RxCocoaLastClickDebugger.findInherenceNode(in: view))",
-                            groupID: "UITapGestureRecognizer"
-                        )
+                        UITapGestureRecognizer.didTapLoggingData?(view)
                     }
                     observer.on(.next(control))
                 }
@@ -77,6 +74,10 @@
             return ControlEvent(events: source)
         }
 
+    }
+
+    extension UITapGestureRecognizer {
+        public static var didTapLoggingData: ((UIView) -> Void)?
     }
 
 #endif
